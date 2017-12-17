@@ -84,6 +84,8 @@ class MemN2N(nn.Module):
 
         # this is a python 3.X only solution
         # a_hat = u[-1]@self.C[self.max_hops].weight.transpose(0, 1)
+        
         # compatible with python 2.X
         a_hat = torch.mm(u[-1],self.C[self.max_hops].weight.transpose(0, 1))
+        
         return a_hat, self.softmax(a_hat)
