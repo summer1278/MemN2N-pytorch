@@ -79,7 +79,7 @@ class Trainer():
             pred = pred_prob.data.max(1)[1] # max func return (max, argmax)
             correct += pred.eq(answer.data).cpu().sum()
 
-        acc = correct / len(loader.dataset)
+        acc = float(correct) / float(len(loader.dataset))
         return acc
 
     def _train_single_epoch(self, epoch):
@@ -120,8 +120,8 @@ class Trainer():
         decay_interval = self.config.decay_interval
         decay_ratio    = self.config.decay_ratio
 
-        decay_count = max(0, epoch // decay_interval)
-        lr = self.config.lr * (decay_ratio ** decay_count)
+        decay_count = max(0, float(epoch) // decay_interval)
+        lr = self.config.lr * (float(decay_ratio) ** float(decay_count))
         for param_group in opt.param_groups:
             param_group["lr"] = lr
 
