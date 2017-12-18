@@ -10,8 +10,8 @@ def position_encoding(sentence_size, embedding_dim):
     le = embedding_dim + 1
     for i in range(1, le):
         for j in range(1, ls):
-            encoding[i-1, j-1] = (i - (embedding_dim+1)/2) * (j - (sentence_size+1)/2)
-    encoding = 1 + 4 * encoding / embedding_dim / sentence_size
+            encoding[i-1, j-1] = (i - (embedding_dim+1.0)/2.0) * (j - (sentence_size+1.0)/2.0)
+    encoding = 1.0 + 4.0 * encoding / embedding_dim / sentence_size
     # Make position encoding of time words identity to avoid modifying them
     encoding[:, -1] = 1.0
     return np.transpose(encoding)
@@ -55,21 +55,25 @@ class MemN2N(nn.Module):
 
     def forward(self, story, query):
         story_size = story.size()
-
+        # print 'story size',story_size
         u = list()
         query_embed = self.C[0](query)
+        # print 'query_embed',query_embed.size()
         # weired way to perform reduce_dot
         encoding = self.encoding.unsqueeze(0).expand_as(query_embed)
         u.append(torch.sum(query_embed*encoding, 1))
         
         for hop in range(self.max_hops):
             embed_A = self.C[hop](story.view(story.size(0), -1))
+            # print story.size(0)
             embed_A = embed_A.view(story_size+(embed_A.size(-1),))
        
             encoding = self.encoding.unsqueeze(0).unsqueeze(1).expand_as(embed_A)
             m_A = torch.sum(embed_A*encoding, 2)
+            # print m_A.size()
        
             u_temp = u[-1].unsqueeze(1).expand_as(m_A)
+            # print "u_temp",u_temp.size()
             prob   = self.softmax(torch.sum(m_A*u_temp, 2))
         
             embed_C = self.C[hop+1](story.view(story.size(0), -1))
