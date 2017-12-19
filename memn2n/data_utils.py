@@ -20,6 +20,7 @@ def load_task(data_dir, task_id, only_supporting=False):
     test_file = [f for f in files if s in f and 'test' in f][0]
     train_data = get_stories(train_file, only_supporting)
     test_data = get_stories(test_file, only_supporting)
+    # print len(train_data),len(test_data)
     return train_data, test_data
 
 
@@ -97,6 +98,9 @@ def vectorize_data(data, word_idx, sentence_size, memory_size):
     """
     S, Q, A = [], [], []
     for story, query, answer in data:
+        # print story
+        # print query
+        # print answer
         ss = []
         for i, sentence in enumerate(story, 1):
             ls = max(0, sentence_size - len(sentence))
@@ -117,10 +121,12 @@ def vectorize_data(data, word_idx, sentence_size, memory_size):
 
         lq = max(0, sentence_size - len(query))
         q = [word_idx[w] for w in query] + [0] * lq
+        # print q
 
         y = np.zeros(len(word_idx) + 1) # 0 is reserved for nil word
         for a in answer:
             y[word_idx[a]] = 1
 
         S.append(ss); Q.append(q); A.append(y)
+    print len(S),len(Q),len(A)
     return np.array(S), np.array(Q), np.array(A)

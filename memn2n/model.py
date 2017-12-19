@@ -14,6 +14,8 @@ def position_encoding(sentence_size, embedding_dim):
     encoding = 1.0 + 4.0 * encoding / embedding_dim / sentence_size
     # Make position encoding of time words identity to avoid modifying them
     encoding[:, -1] = 1.0
+    print 'sent_size',sentence_size,'embed_dim',embedding_dim
+    print 'encoding -1:',np.transpose(encoding).shape
     return np.transpose(encoding)
 
 class AttrProxy(object):
@@ -58,9 +60,10 @@ class MemN2N(nn.Module):
         # print 'story size',story_size
         u = list()
         query_embed = self.C[0](query)
-        # print 'query_embed',query_embed.size()
+        # print 'query',query.size()
         # weired way to perform reduce_dot
         encoding = self.encoding.unsqueeze(0).expand_as(query_embed)
+        # print 'encoding',encoding.shape
         u.append(torch.sum(query_embed*encoding, 1))
         
         for hop in range(self.max_hops):

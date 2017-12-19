@@ -42,6 +42,9 @@ class bAbIDataset(data.Dataset):
         if train:
             story, query, answer = vectorize_data(train_data, self.word_idx,
                 self.sentence_size, self.memory_size)
+            print 'story',story.shape
+            print 'query[0]',torch.LongTensor(query)[0].shape
+            print 'answer',answer.shape
         else:
             story, query, answer = vectorize_data(test_data, self.word_idx,
                 self.sentence_size, self.memory_size)

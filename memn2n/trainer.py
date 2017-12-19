@@ -74,7 +74,7 @@ class Trainer():
                 story = story.cuda()
                 query = query.cuda()
                 answer = answer.cuda()
-
+            
             pred_prob = self.mem_n2n(story, query)[1]
             pred = pred_prob.data.max(1)[1] # max func return (max, argmax)
             correct += pred.eq(answer.data).cpu().sum()
@@ -85,7 +85,11 @@ class Trainer():
     def _train_single_epoch(self, epoch):
         config = self.config
         num_steps_per_epoch = len(self.train_loader)
+        print self.train_loader[0]
         for step, (story, query, answer) in enumerate(self.train_loader):
+            print 'story',story.shape
+            print 'query',query.shape
+            print 'answer',answer.shape
             story = Variable(story)
             query = Variable(query)
             answer = Variable(answer)
