@@ -57,10 +57,10 @@ class MemN2N(nn.Module):
 
     def forward(self, story, query):
         story_size = story.size()
-        # print 'story size',story_size
+        print 'story size',story_size
         u = list()
         query_embed = self.C[0](query)
-        # print 'query',query.size()
+        print 'query',query.size()
         # weired way to perform reduce_dot
         encoding = self.encoding.unsqueeze(0).expand_as(query_embed)
         # print 'encoding',encoding.shape
