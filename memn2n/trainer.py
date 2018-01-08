@@ -85,11 +85,7 @@ class Trainer():
     def _train_single_epoch(self, epoch):
         config = self.config
         num_steps_per_epoch = len(self.train_loader)
-        # print self.train_loader[0]
         for step, (story, query, answer) in enumerate(self.train_loader):
-            # print 'story',story.shape
-            # print 'query',query.shape
-            # print 'answer',answer.shape
             story = Variable(story)
             query = Variable(query)
             answer = Variable(answer)
