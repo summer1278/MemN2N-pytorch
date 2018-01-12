@@ -45,6 +45,7 @@ class MemN2N(nn.Module):
         for hop in range(self.max_hops+1):
             C = nn.Embedding(num_vocab, embedding_dim, padding_idx=0)
             C.weight.data.normal_(0, 0.1)
+            print C
             self.add_module("C_{}".format(hop), C)
         self.C = AttrProxy(self, "C_")
 
@@ -60,20 +61,20 @@ class MemN2N(nn.Module):
         print 'story size',story_size
         u = list()
         query_embed = self.C[0](query)
-        print 'query',query.size()
+        # print 'query',query.size()
+        # print 'query_embed',query_embed.size()
         # weired way to perform reduce_dot
         encoding = self.encoding.unsqueeze(0).expand_as(query_embed)
         # print 'encoding',encoding.shape
         u.append(torch.sum(query_embed*encoding, 1))
-        
         for hop in range(self.max_hops):
             embed_A = self.C[hop](story.view(story.size(0), -1))
-            # print story.size(0)
+            print embed_A.size()
             embed_A = embed_A.view(story_size+(embed_A.size(-1),))
        
             encoding = self.encoding.unsqueeze(0).unsqueeze(1).expand_as(embed_A)
             m_A = torch.sum(embed_A*encoding, 2)
-            # print m_A.size()
+            print m_A.size()
        
             u_temp = u[-1].unsqueeze(1).expand_as(m_A)
             # print "u_temp",u_temp.size()
