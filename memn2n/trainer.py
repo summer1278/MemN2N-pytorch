@@ -94,7 +94,9 @@ class Trainer():
                 story = story.cuda()
                 query = query.cuda()
                 answer = answer.cuda()
-        
+            
+            # print self.mem_n2n(story, query)[0].size()
+            # print answer.size()
             self.opt.zero_grad()
             loss = self.ce_fn(self.mem_n2n(story, query)[0], answer)
             loss.backward()

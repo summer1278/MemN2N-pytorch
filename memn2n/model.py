@@ -58,7 +58,7 @@ class MemN2N(nn.Module):
 
     def forward(self, story, query):
         story_size = story.size()
-        print 'story size',story_size
+        # print 'story size',story_size
         u = list()
         query_embed = self.C[0](query)
         # print 'query',query.size()
@@ -69,12 +69,12 @@ class MemN2N(nn.Module):
         u.append(torch.sum(query_embed*encoding, 1))
         for hop in range(self.max_hops):
             embed_A = self.C[hop](story.view(story.size(0), -1))
-            print embed_A.size()
+            # print embed_A.size()
             embed_A = embed_A.view(story_size+(embed_A.size(-1),))
        
             encoding = self.encoding.unsqueeze(0).unsqueeze(1).expand_as(embed_A)
             m_A = torch.sum(embed_A*encoding, 2)
-            print m_A.size()
+            # print m_A.size()
        
             u_temp = u[-1].unsqueeze(1).expand_as(m_A)
             # print "u_temp",u_temp.size()
